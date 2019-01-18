@@ -1,0 +1,22 @@
+{
+  "name": "game-sdk",
+  "version": "1.0.0",
+  "description": "quanta game sdk ",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhanlt-ibl/game-sdk.git"
+  },
+  "author": "nhanlt-ibl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nhanlt-ibl/game-sdk/issues"
+  },
+  "homepage": "https://github.com/nhanlt-ibl/game-sdk#readme",
+  "devDependencies": {
+    "typescript": "^3.2.4"
+  }
+}
