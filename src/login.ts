@@ -1,4 +1,6 @@
 import {AuthenURL, ButtonId} from './config';
+import {TYPES} from '../lib/config';
+
 export const loginCallback = (callback: (success: any, error: any) => void) => {
   window.addEventListener('message', (e: MessageEvent) => {
     try {
@@ -12,6 +14,31 @@ export const loginCallback = (callback: (success: any, error: any) => void) => {
       /* handle error */
     }
   });
+};
+const checkAuthen = () => {
+  try {
+    const urlParams: URLSearchParams = new URLSearchParams(
+      window.location.search,
+    );
+    const params: string | null = urlParams.get('token');
+    if (params && params.length > 0) {
+      window.postMessage(
+        JSON.stringify({
+          type: TYPES.IS_AUTHENTICATED,
+        }),
+        '*',
+      );
+    } else {
+      window.postMessage(
+        JSON.stringify({
+          type: TYPES.REQUEST_LOGIN,
+        }),
+        '*',
+      );
+    }
+  } catch (e) {
+    /* handle error */
+  }
 };
 export const initAuthenScript = () => {
   document.addEventListener('DOMContentLoaded', () => {
