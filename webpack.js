@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     path: __dirname + '/dist',
-    filename: '[name].js',
+    filename: 'game-sdk.js',
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],

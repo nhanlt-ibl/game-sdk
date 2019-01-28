@@ -1,5 +1,4 @@
-import {AuthenURL, ButtonId} from './config';
-import {TYPES} from '../lib/config';
+import {AuthenURL, ButtonId, TYPES} from './config';
 
 export const loginCallback = (callback: (success: any, error: any) => void) => {
   window.addEventListener('message', (e: MessageEvent) => {
@@ -10,29 +9,50 @@ export const loginCallback = (callback: (success: any, error: any) => void) => {
         callback(null, 'message error');
       }
     } catch (e) {
+      callback(null, 'message error');
       console.error(e);
       /* handle error */
     }
   });
 };
-const checkAuthen = () => {
-  const urlParams: URLSearchParams = new URLSearchParams(
-    window.location.search,
-  );
-  const params: string | null = urlParams.get('token');
-  let message: any = {};
-  if (params && params.length > 0) {
-    message = {
-      type: TYPES.IS_AUTHENTICATED,
-    };
-  } else {
-    message = {
-      type: TYPES.REQUEST_LOGIN,
-    };
-  }
+export const checkAuthen = (): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const urlParams: URLSearchParams = new URLSearchParams(
+      window.location.search,
+    );
+    const token: string | null = urlParams.get('token') || '';
+    const client_id: string | null = urlParams.get('client_id') || '';
+    let message: any = {};
+    if (token.length > 0 && client_id.length > 0) {
+      return fetch(`${AuthenURL}?access_token=${token}&client_id=${client_id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            return resolve(data);
+          }
+          return reject(data);
+        })
+        .catch(e => {
+          return reject(e);
+        });
+    }
+    return reject({
+      status: 'error',
+      message: 'invalid access_token or client_id',
+    });
+  });
+};
+export const requestLogin = () => {
+  let message = {
+    type: TYPES.REQUEST_LOGIN,
+  };
+  window.postMessage(JSON.stringify(message), '*');
+};
+export const sendMessage = (message: string) => {
   window.postMessage(message, '*');
 };
-const loginSDK = () => {
+
+export const loginSDK = () => {
   const loginBtn: HTMLElement | null = document.getElementById(ButtonId);
   if (!loginBtn) {
     throw `Quanta login button notfound \n Please add id=${ButtonId} into login tag`;
@@ -56,17 +76,6 @@ const loginSDK = () => {
       window.location.href = `${AuthenURL}?callback=${
         loginBtn.dataset.redirect
       }`;
-    }
-  });
-};
-export const initAuthenScript = () => {
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      checkAuthen();
-      loginSDK();
-    } catch (e) {
-      console.error(e);
-      /* handle error */
     }
   });
 };
