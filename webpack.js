@@ -1,24 +1,20 @@
-const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack')
+const TerserPlugin = require('terser-webpack-plugin')
 module.exports = {
-  entry: './src/index.ts',
+  entry: './lib/index.js',
   output: {
     path: __dirname + '/dist',
-    filename: 'game-sdk.js',
+    filename: 'quantasdk.js'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.js', '.json']
   },
   optimization: {
-    minimizer: [new TerserPlugin()],
+    minimizer: [new TerserPlugin()]
   },
   mode: 'production',
   module: {
     rules: [
-      {
-        test: /\.(ts|js)?$/,
-        loader: 'ts-loader',
-      },
-    ],
-  },
-};
+    ]
+  }
+}
