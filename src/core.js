@@ -1,60 +1,61 @@
-import { TIMEOUT } from './config'
-import { ERROR_FETCH_TIMEOUT } from './errors'
+import {TIMEOUT} from './config';
+import {ERROR_FETCH_TIMEOUT} from './errors';
 // eslint-disable-next-line
-const globalInstance = typeof window === 'object' ? window : Function('return this')()
+const globalInstance =
+  typeof window === 'object' ? window : new Function('return this')();
 
-export function exportToGlobal (key, value) {
-  globalInstance[key] = value
+export function exportToGlobal(key, value) {
+  console.log('first exportToGlobal');
+  globalInstance[key] = value;
 }
 // TODO: Using web at core bridge
 export default class CoreBridge {
-  constructor () {
-    this.bridge = globalInstance
-    this.instanceOnMessage = null
+  constructor() {
+    this.bridge = globalInstance;
+    this.instanceOnMessage = null;
     this.defaultOption = {
-      method: 'get'
-    }
+      method: 'get',
+    };
   }
-  sendMessage (message) {
-    this.bridge.postMessage(JSON.stringify(message), '*')
+  sendMessage(message) {
+    this.bridge.postMessage(JSON.stringify(message), '*');
   }
-  onMessage (onMessage) {
+  onMessage(onMessage) {
     if (this.instanceOnMessage) {
-      this.bridge.removeEventListener('message', this.instanceOnMessage)
-      this.instanceOnMessage = null
+      this.bridge.removeEventListener('message', this.instanceOnMessage);
+      this.instanceOnMessage = null;
     }
-    this.instanceOnMessage = this.bridge.addEventListener('message', (e) => {
+    this.instanceOnMessage = this.bridge.addEventListener('message', e => {
       try {
-        const data = JSON.parse(e.data)
+        const data = JSON.parse(e.data);
         if (data) {
-          onMessage(true, data)
+          onMessage(true, data);
         }
-        onMessage(false, 'Invalid return')
+        onMessage(false, 'Invalid return');
       } catch (e) {
-        onMessage(null, e.message)
+        onMessage(null, e.message);
         /* handle error */
       }
-    })
+    });
   }
-  appendFetchOption (option) {
+  appendFetchOption(option) {
     this.defaultOption = {
       ...this.defaultOption,
-      ...option
-    }
+      ...option,
+    };
   }
-  fetch (url, options = {}) {
+  fetch(url, options = {}) {
     return Promise.race([
       // eslint-disable-next-line
       fetch(url, {
         ...this.defaultOption,
-        options
-      })
-        .then(res => res.json()),
+        options,
+      }).then(res => res.json()),
       new Promise((resolve, reject) => {
         setTimeout(() => {
-          reject(ERROR_FETCH_TIMEOUT)
-        }, TIMEOUT)
-      })
-    ])
+          reject(ERROR_FETCH_TIMEOUT);
+        }, TIMEOUT);
+      }),
+    ]);
   }
 }
