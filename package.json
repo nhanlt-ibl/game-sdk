@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run transform && npm run pack",
-    "pack": "webpack --config ./webpack.js",
+    "build": "webpack --config ./webpack.js",
     "transform": "babel src --out-dir lib"
   },
   "repository": {
@@ -28,5 +27,10 @@
     "terser-webpack-plugin": "^1.2.1",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
+    "babel-loader": "^8.0.5"
   }
 }
