@@ -16,7 +16,7 @@ class QuantaSDK extends CoreBridge {
     // Variable
     console.log('init App');
     this.config = config;
-    this.options = options;
+    this.callback = callback;
     this.requests = {};
     this.postMessage = null;
     this.user = {};
@@ -24,12 +24,11 @@ class QuantaSDK extends CoreBridge {
     // Events
     this.onResponse = null;
 
-    this.initial(config, options);
+    this.initial(config, callback);
   }
   parseUserInformation() {
     // eslint-disable-next-line
     const params = new URLSearchParams(this.bridge.location.search);
-    console.log('this.bridgee', this.bridge.location.search);
     // Iterate the search parameters.
     this.user.clientId = params.get('client_id');
 
@@ -56,7 +55,7 @@ class QuantaSDK extends CoreBridge {
     }
   }
   // TODO: should exchange userId and appClientSecret to temporary key
-  async initial(config, options) {
+  async initial(config, callback) {
     this.parseUserInformation();
     // TODO: fetch with server to validate appId and appClientSecret
     // Check user authentication
@@ -72,9 +71,7 @@ class QuantaSDK extends CoreBridge {
     } else {
       this.user.isAuthentication = false;
     }
-    if (options.global) {
-      this.bridge.instanceQuantaSDK = this;
-    }
+    this.bridge.instanceQuantaSDK = this;
     // Start watcher
     this.responseWatcher();
     // SDK loaded
