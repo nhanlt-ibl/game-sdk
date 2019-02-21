@@ -1,8 +1,9 @@
 export const REQUEST_TYPES = {
   REQUEST_LOGIN: 'REQUEST_LOGIN',
-  REQUEST_TOPUP: 'REQUEST_TOPUP'
-}
+  REQUEST_TOPUP: 'REQUEST_TOPUP',
+  REQUEST_QUIT_APP: 'REQUEST_QUIT',
+};
 
 export const EVENTS_TYPES = {
-  RESPONSE: 'response'
-}
+  RESPONSE: 'response',
+};
